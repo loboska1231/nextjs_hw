@@ -1,10 +1,20 @@
-import {IUser} from "@/models/IUser";
+import axios from "axios";
+import {ICar} from "@/models/ICar";
 
-export const getAllUsers = async ():Promise<IUser[]>=>{
-    return await fetch('https://jsonplaceholder.typicode.com/users')
-        .then(obj=>obj.json())
+const axiosInstance = axios.create({
+    baseURL:'http://owu.linkpc.net/carsAPI/v1',
+    headers:{'Content-type': 'application/json'}
+})
+export const getAllCars = async () :Promise<ICar[]>=>{
+    const {data} = await axiosInstance.get<ICar[]>('/cars')
+    return data;
 }
-export const getUser = async (id:number):Promise<IUser>=>{
-    return await fetch('https://jsonplaceholder.typicode.com/users/'+id)
-        .then(obj=>obj.json())
+type formCar = {
+    brand:string,
+    price:number,
+    year:number
+}
+export const addCar = async ({brand,price,year}:formCar) =>{
+    const {data} = await axiosInstance.post<formCar>('cars', {brand,price,year})
+    console.log(data)
 }
